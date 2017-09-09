@@ -7,7 +7,7 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-// Keep the reference around so we don't get ganked by the garbage colletor
+// Keep the references around so we don't get ganked by the garbage colletor
 let mainWindow
 let pingInterval
 
@@ -33,8 +33,10 @@ function createWindow () {
 
 }
 
-// Wait for Electron to boot up
+// Wait for Electron to boot up, then create main window
 app.on('ready', () => {
+
+  // Intercept the 'file' protocol so we can serve static content without using express etc. 
   protocol.interceptFileProtocol('file', (request, callback) => {
     const url = request.url.substr(7)    /* all urls start with 'file://' */
     callback({ path: path.normalize(`${__dirname}/${url}`)})
