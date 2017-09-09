@@ -20,6 +20,7 @@ npm start
 
 ## TODO
 
+Buffer for asynchronous client requests (eg. ship position -> buffer the next suitable data item for this request.) Also make sure requests stay in sync.
 Add polling for ship position/velocity. 
 
 Plug the scene manager back in. 
