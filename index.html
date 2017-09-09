@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>SpaceGame Client</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css"/>
+		<script src="./js/three.min.js"></script>
+    <audio  autoplay loop preload>
+      <source src="./assets/title.mp3"/>
+    </audio>
+	</head>
+	<body>
+   
+
+    <script src="./scenes/main_screen.js"></script>
+
+
+    <img id="logo" src="./assets/logo.png"/>
+    <div class="login_wrapper">
+      <form class="login_form">
+        <p>
+          <label class="form_label" for="user">User</label>
+          <input type="text" id="user" name="user" value="Boskovitchz"/>
+        </p>
+        <p>
+          <label class="form_label" for="server">Server</label>
+          <input type="text" id="server" name="server" value="127.0.0.1:1961"/>
+        </p>
+        <div class="login_button">Login</login>
+      </form>
+    </div>
+
+    <!-- Add testing code -->
+    <script>
+      require('./renderer.js');
+    </script>
+	</body>
+</html>
