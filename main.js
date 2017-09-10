@@ -6,10 +6,13 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+const netclient = require('./network.js');
 
 // Keep the references around so we don't get ganked by the garbage colletor
 let mainWindow
 let pingInterval
+let networkClient
+let appState
 
 function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
@@ -25,11 +28,14 @@ function createWindow () {
 
   mainWindow.on('closed', function () {
     mainWindow = null
-    clearInterval(pingInterval);
+    networkClient.close();
+    networkClient = null;
+//    clearInterval(pingInterval);
   })
 
-  // Start ping timer for IPC testing
-  pingInterval = setInterval(function() { console.log("Pinging mainwindow."); mainWindow.webContents.send('ping', 'This is your complimentary 2 second ping'); }, 2000);
+  //pingInterval = setInterval(function() { console.log("Pinging mainwindow."); mainWindow.webContents.send('ping', 'This is your complimentary 2 second ping'); }, 2000);
+  
+  
 
 }
 
@@ -44,6 +50,12 @@ app.on('ready', () => {
     if (err) console.error('Failed to register protocol')
   })
   createWindow()
+
+  // Initialize network client
+  networkClient = new netclient();
+
+  // We are now in the main menu
+  appState = "main_menu";
 })
 
 
@@ -63,4 +75,6 @@ app.on('activate', function () {
     createWindow()
   }
 })
+
+
 
