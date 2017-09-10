@@ -20,10 +20,6 @@ npm start
 
 ## TODO
 
-Plug the scene manager back in. 
-
-Move main menu fully to it's own scene. 
-
 Generate some environment to fly in.
 
 
