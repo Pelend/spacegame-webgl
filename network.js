@@ -8,7 +8,8 @@
 // 'disconnected'   - client was disconnected
 // 'error'          - there was a connection error
 //
-//
+// 'line'           - the client sent a line of data
+// 'data'           - any data from the client
 //
 
 // Constants
@@ -27,11 +28,13 @@ var net = require('net');
 
 var client = function() {
   var self = this;
+  this.connected = false;
   this.host = DEFAULT_HOST;
   this.port = DEFAULT_PORT;
   self.emitter = new ClientEmitter();
   this.socket = new net.Socket();
-  
+  this.socket.setEncoding('utf8'); 
+  this._buffer = null;
 
   // Event hooks
   this.on = function(name, callback) {
@@ -41,6 +44,7 @@ var client = function() {
   }
 
   this.socket.on('error', (err) => {
+
     self.emitter.emit('error', err);
   });
 
@@ -49,7 +53,24 @@ var client = function() {
   });
 
   this.socket.on('data', (data) => {
-    self.emitter.emit('data', data);
+    if(typeof this._buffer === 'undefined' || !this._buffer) {
+      this._buffer = "";
+    }
+    console.log("Raw data: " + data);
+    this._buffer += data;
+
+
+    if(this._buffer.match(/\n/)) {
+      var len = this._buffer.indexOf("\n");
+      var line = this._buffer.slice(0,len);
+      this.emitter.emit('line', line);
+      this._buffer = this._buffer.slice(len+1);
+    }
+
+  });
+
+  this.socket.on('end', function() {
+
   });
 
   // Connection functions
@@ -86,11 +107,33 @@ var client = function() {
     console.log("Trying to connect to " + this.host + ":" + this.port);
     this.socket.connect(this.port, this.host, function() {
       console.log("Connected");
+      self.connected = true;
       self.emitter.emit('connected');
     });
 
   }
 
+  // Closes the socket end removes event handlers
+  this.close = function() {
+    self.socket.end(); 
+    self.socket = null;
+    self.removeListeners();
+    self.emitter = null;
+  }
+
+  this.disconnect = function() {
+    self.socket.send("quit\n");
+    self.close();
+    self.connected = false;
+  }
+
+  this.removeListeners = function() {
+    this.emitter.removeAllListeners('connected');
+    this.emitter.removeAllListeners('disconnected');
+    this.emitter.removeAllListeners('error');
+    this.emitter.removeAllListeners('line');
+    this.emitter.removeAllListeners('data');
+  }
   /// Send to server
   this.send = function(data) {
     this.socket.write(data);
