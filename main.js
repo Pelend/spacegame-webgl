@@ -25,7 +25,7 @@
   function createWindow () {
     mainWindow = new BrowserWindow({width: 800, height: 600});
 
-    mainWindow.setMenu(null);
+   // mainWindow.setMenu(null);
     mainWindow.setTitle("SpaceGame Client");
 
     // Load scene
