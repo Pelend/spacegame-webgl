@@ -1,18 +1,25 @@
+///
+// FILE   : main.js
+// BRIEF  : SpaceGame WebGL application main
+
 const electron = require('electron')
+const gameClient = require('./gameclient.js);
+
 // Module to control application life.
 const { app, protocol } = require('electron')
+
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
-const netclient = require('./network.js');
 
 // Keep the references around so we don't get ganked by the garbage colletor
 let mainWindow
 let pingInterval
-let networkClient
 let appState
+let gameClient
+
 
 function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
@@ -28,15 +35,7 @@ function createWindow () {
 
   mainWindow.on('closed', function () {
     mainWindow = null
-    networkClient.close();
-    networkClient = null;
-//    clearInterval(pingInterval);
   })
-
-  //pingInterval = setInterval(function() { console.log("Pinging mainwindow."); mainWindow.webContents.send('ping', 'This is your complimentary 2 second ping'); }, 2000);
-  
-  
-
 }
 
 // Wait for Electron to boot up, then create main window
@@ -51,8 +50,6 @@ app.on('ready', () => {
   })
   createWindow()
 
-  // Initialize network client
-  networkClient = new netclient();
 
   // We are now in the main menu
   appState = "main_menu";
