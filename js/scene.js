@@ -13,7 +13,13 @@ var SceneHandler = function() {
   // Stuff goes here, yay
 
   this.initialize = function() {
-    // initializeScene
+    try {
+      console.log("Trying to initialize scene");
+      window.InitializeScene();
+    } 
+    catch(e) {
+      console.error("Unable to initialize scene: " + e.message);
+    }
   }
 }
 

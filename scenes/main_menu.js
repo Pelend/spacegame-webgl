@@ -10,9 +10,17 @@
 			var cameraPerspectiver;
 			var frustumSize = 600;
       var cameraTarget;
-			init();
-			animate();
 
+      // Called by /js/scene.js
+      window.InitializeScene = function() {
+        console.log("initializing scene");
+        var bgm = document.getElementById("bgm");
+        bgm.volume = 0.5;
+        bgm.play();
+
+      }
+      init();
+      animate();
 			function init() {
 
 				container = document.createElement( 'div' );
