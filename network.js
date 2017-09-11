@@ -44,19 +44,18 @@ var client = function() {
   }
 
   this.socket.on('error', (err) => {
-
-    self.emitter.emit('error', err);
+    console.log(err);
   });
 
   this.socket.on('close', () => {
-    self.emitter.emit('disconnectred');
+    self.emitter.emit('disconnected');
   });
 
   this.socket.on('data', (data) => {
     if(typeof this._buffer === 'undefined' || !this._buffer) {
       this._buffer = "";
     }
-    console.log("Raw data: " + data);
+    //console.log("Raw data: " + data);
     this._buffer += data;
 
 
@@ -85,7 +84,7 @@ var client = function() {
           this.address = t[0];
         } 
         catch(e) {
-          console.log("Invalid address format: " + address);
+          console.error("Invalid address format: " + address);
 
           // Restore defaults
           this.port = DEFAULT_PORT;
@@ -97,7 +96,7 @@ var client = function() {
         if(typeof address === 'string') {
           this.host = address;
         } else {
-          console.log("Invalid address: ", address);
+          console.error("Invalid address: ", address);
 
           return;
         }
@@ -122,7 +121,12 @@ var client = function() {
   }
 
   this.disconnect = function() {
+    try {
     self.socket.send("quit\n");
+    }
+    catch(e) {
+      self._error(e.message);
+    }
     self.close();
     self.connected = false;
   }
@@ -136,7 +140,28 @@ var client = function() {
   }
   /// Send to server
   this.send = function(data) {
-    this.socket.write(data);
+    if(self.socket.writable === false) { 
+      console.log("Socket is not writable");
+      self._error( "Unable to write to socket");
+      return;
+    }
+    try {
+      this.socket.write(data);
+    }
+    catch(e) {
+      console.log("Something went wrong: " + e.message);
+      //this.emitter.emit('connection_error', "Error while writing to socket: " + e.message); 
+    }
+  }
+
+  this._error = function(err) {
+    // If anyone is listening, let them know
+   if(self.emitter.listenerCount('error') > 0) {
+      self.emitter.emit('error', err);
+   } else {
+      console.error(err);
+   }
+
   }
 }
 
