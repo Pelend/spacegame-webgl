@@ -1,21 +1,20 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 	<head>
     <title>SpaceGame Client</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="/css/style.css"/>
 		<script src="/js/three.min.js"></script>
-    <audio  autoplay loop preload>
-      <source src="/assets/title.mp3"/>
-    </audio>
-	</head>
+    <script src="/js/scene.js"></script>
+    <script>
+      var sceneHandler = new SceneHandler();
+    </script>
+  </head>
+
 	<body>
-   
-
     <script src="./main_menu.js"></script>
-
-
     <img id="logo" src="/assets/logo.png"/>
     <div class="login_wrapper">
       <form class="login_form">
@@ -27,9 +26,16 @@
           <label class="form_label" for="server">Server</label>
           <input type="text" id="server" name="server" value="127.0.0.1:1961"/>
         </p>
-        <div class="login_button">Login</login>
+        <div class="login_button" id="btn_login" >Login</div>
       </form>
     </div>
 
+    <audio id="bgm" loop preload>
+      <source src="/assets/title.mp3"/>
+    </audio>
+
+    <script>
+      InitializeScene();
+    </script>
 	</body>
 </html>
