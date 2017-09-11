@@ -5,13 +5,15 @@
 
 const VectorRegexp = /\[\s*(\-?\d+\.\d*(?:e\-\d*)?)\s*(\-?\d+\.\d*(?:e\-\d*)?)\s*(\-?\d+\.\d*(?:e\-\d*)?)\s*\]/;
 
-module.exports.Vector3D = function(x = 0, y = 0, z = 0) {
+
+Vector3D = function(x = 0, y = 0, z = 0) {
   this.x = x;
   this.y = y;
   this.z = z;
 }
 
 
+module.exports.Vector3D = Vector3D;
 
 module.exports.parseVector = function(line) {
   var v = line.match(VectorRegexp);
